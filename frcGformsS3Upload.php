@@ -431,7 +431,8 @@ class FrcGformsS3Upload {
 
         $files       = GFCommon::json_decode( stripslashes( GFForms::post( 'gform_uploaded_files' ) ) );
         $upload_path = $this->gforms_path( $form['id'] );
-        $upload_url  = $this->get_aws_url( $as3cf ) . $upload_path;
+        $key_prefix  = ltrim(untrailingslashit( $as3cf->get_object_prefix() ), '/');
+        $upload_url  = rtrim($this->get_aws_url( $as3cf ), '/') . '/' . ltrim($key_prefix . $upload_path, '/');
         $dir         = wp_upload_dir();
         $update      = false;
 
