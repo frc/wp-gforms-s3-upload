@@ -24,6 +24,7 @@ class FrcGformsS3Upload {
     protected $plugin_dir = '';
     protected $plugin_url = '';
     protected $plugin_name = '';
+    const DEFAULT_ACL = 'public-read';
 
     public function __construct() {
         $this->plugin_dir  = untrailingslashit( plugin_dir_path( __FILE__ ) );
@@ -243,7 +244,7 @@ class FrcGformsS3Upload {
             'Bucket'       => $as3cf->get_setting( 'bucket' ),
             'Key'          => $key_prefix . $upload_path . $filename,
             'SourceFile'   => $file_path,
-            'ACL'          => $as3cf::DEFAULT_ACL,
+            'ACL'          => $this::DEFAULT_ACL,
             'ContentType'  => $type,
             'CacheControl' => 'max-age=31536000',
         ];
@@ -273,8 +274,12 @@ class FrcGformsS3Upload {
 
         apply_filters( 'wp_handle_upload_prefilter', $fake_file_object );
 
+        if (method_exists($s3client, 'putObject')) {
+            $s3client->putObject( $args );
+        } else {
+            $s3client->upload_object( $args );
+        }
         // Upload to S3
-        $s3client->putObject( $args );
 
         // Update GF entry with the new S3 URL
         $url = rtrim( $this->get_aws_url( $as3cf ), '/' ) . '/' . ltrim( $key_prefix . $upload_path . $filename, '/' );
