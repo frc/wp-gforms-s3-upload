@@ -68,7 +68,12 @@ class FrcGformsS3Upload {
 
     function check_for_active_plugins() {
         // check for plugin using plugin name
-        if ( in_array( 'wp-amazon-s3-and-cloudfront/wordpress-s3.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) && in_array( 'gravityforms/gravityforms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+        $plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+
+        if ( ( in_array( 'wp-amazon-s3-and-cloudfront/wordpress-s3.php', $plugins ) ||
+               in_array( 'amazon-s3-and-cloudfront/wordpress-s3.php', $plugins )
+             ) &&
+             in_array( 'gravityforms/gravityforms.php', $plugins ) ) {
             return true;
         }
 
