@@ -6,7 +6,7 @@
       "email": "janne.aalto@frantic.com"
     }
   ],
-  "license": "GPL v3",
+  "license": "MIT",
   "description": "gforms s3 uploads",
   "type": "wordpress-plugin",
   "repositories": [
