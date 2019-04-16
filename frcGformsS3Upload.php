@@ -38,9 +38,7 @@ class FrcGformsS3Upload {
 
     }
 
-    public function activate() {
-
-    }
+    public function activate() { }
 
     // do nothing
     public function deactivate() { }
