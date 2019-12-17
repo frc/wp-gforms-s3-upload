@@ -22,6 +22,7 @@ class FrcGformsS3Upload {
     private static $instance = null;
     private $td = 'frc-gforms-s3';
     const DEFAULT_ACL = 'public-read';
+    private $activePlugins = [];
 
     public function __construct() {
     }
@@ -34,8 +35,32 @@ class FrcGformsS3Upload {
         return self::$instance;
     }
 
+    private function setActivePlugins() {
+        $this->activePlugins = apply_filters('active_plugins', get_option('active_plugins'));
+        if (is_multisite()) {
+            $multisitePlugins    = get_site_option('active_sitewide_plugins');
+            $multisitePlugins    = array_keys($multisitePlugins);
+            $this->activePlugins = array_merge($this->activePlugins, $multisitePlugins);
+        }
+
+        return $this->activePlugins;
+    }
+
+    private function gFormsActive() {
+        return in_array('gravityforms/gravityforms.php', $this->activePlugins);
+    }
+
+    private function s3Active() {
+        return (in_array('wp-amazon-s3-and-cloudfront/wordpress-s3.php', $this->activePlugins) || in_array('amazon-s3-and-cloudfront/wordpress-s3.php', $this->activePlugins));
+    }
+
+    private function checkForActivePlugins() {
+        return $this->gFormsActive() && $this->s3Active();
+    }
+
     public function init() {
         load_plugin_textdomain($this->td, false, basename(dirname(__FILE__)) . '/languages');
+        $this->setActivePlugins();
 
         if ($this->checkForActivePlugins()) {
             add_action('gform_post_multifile_upload', [$this, 'gformPostMultifileUploadToAws'], 10, 5);
@@ -43,17 +68,6 @@ class FrcGformsS3Upload {
             add_action('gform_pre_submission', [$this, 'gformPreSubmissionRenameUploadedFiles'], 5, 1);
             add_filter('gform_entry_post_save', [$this, 'entryPostSaveAws'], 5, 2);
         }
-    }
-
-    private function checkForActivePlugins() {
-        // check for plugin using plugin name
-        $plugins = apply_filters('active_plugins', get_option('active_plugins'));
-
-        if ((in_array('wp-amazon-s3-and-cloudfront/wordpress-s3.php', $plugins) || in_array('amazon-s3-and-cloudfront/wordpress-s3.php', $plugins)) && in_array('gravityforms/gravityforms.php', $plugins)) {
-            return true;
-        }
-
-        return false;
     }
 
     private function uniqueFilename($uploaded_filename, $tmp_file_name) {
