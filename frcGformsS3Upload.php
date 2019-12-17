@@ -215,7 +215,7 @@ class FrcGformsS3Upload {
         return false;
     }
 
-    private function getAwsUrl() {
+    public function getAwsUrl() {
         $as3cf = $this->getAs3cfInstance();
         if (is_null($as3cf)) {
             return false;
