@@ -263,7 +263,7 @@ class FrcGformsS3Upload {
         if (method_exists($as3cf, 'get_s3client')) {
             $s3client = $as3cf->get_s3client($region);
         } else {
-            $s3client = $as3cf->get_provider()->get_client($region);
+            $s3client = $as3cf->get_provider_client($region);
         }
 
         $key_prefix = ltrim(untrailingslashit($as3cf->get_object_prefix()), '/');
