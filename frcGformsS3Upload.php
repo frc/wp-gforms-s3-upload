@@ -3,7 +3,7 @@
  * Plugin Name: Frc Gravity Forms S3 Upload
  * Plugin URI:
  * Description:
- * Version:     0.0.1
+ * Version:     0.4.2
  * Author:      Janne Aalto / Frantic Oy
  * Author URI:  http://www.frantic.com
  * Text Domain: frc-gforms-s3
