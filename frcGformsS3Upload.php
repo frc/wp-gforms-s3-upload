@@ -3,7 +3,7 @@
  * Plugin Name: Frc Gravity Forms S3 Upload
  * Plugin URI:
  * Description:
- * Version:     0.4.2
+ * Version:     0.4.3
  * Author:      Janne Aalto / Frantic Oy
  * Author URI:  http://www.frantic.com
  * Text Domain: frc-gforms-s3
@@ -267,13 +267,15 @@ class FrcGformsS3Upload {
         }
 
         $key_prefix = ltrim(untrailingslashit($as3cf->get_object_prefix()), '/');
+        $key = $key_prefix . $upload_path . $filename;
+        $key = ltrim($key, '/');
 
         $type = wp_check_filetype($file_path);
         $type = $type['type'];
 
         $args = [
             'Bucket'       => $as3cf->get_setting('bucket'),
-            'Key'          => $key_prefix . $upload_path . $filename,
+            'Key'          => $key,
             'SourceFile'   => $file_path,
             'ACL'          => $this::DEFAULT_ACL,
             'ContentType'  => $type,
