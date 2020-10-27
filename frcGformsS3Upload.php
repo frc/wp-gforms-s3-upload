@@ -459,7 +459,7 @@ class FrcGformsS3Upload {
 
         $as3cf = $this->getAs3cfInstance();
         if (is_null($as3cf)) {
-            return false;
+            return $entry;
         }
 
         $files       = GFCommon::json_decode(stripslashes(GFForms::post('gform_uploaded_files')));
